@@ -1,1 +1,62 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[rgb(2,1,43)] font-dm text-white;
+    /* @apply bg-blue-900 font-dm text-white; */
+  }
+
+  p {
+    @apply text-base; /* 18px by default */
+  }
+}
+
+main {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-areas:
+    "searchEngine"
+    "place"
+    "dailyForecast"
+    "hourlyForecast";
+}
+
+section:nth-child(1) {
+  grid-area: searchEngine;
+}
+
+section:nth-child(2) {
+  grid-area: place;
+}
+
+section:nth-child(3) {
+  grid-area: dailyForecast;
+}
+
+section:nth-child(4) {
+  grid-area: hourlyForecast;
+}
+
+.bg-image {
+  background-image: url(../public/assets/images/bg-today-small.svg);
+  height: 250px;
+  background-position: center;
+  background-size: cover;
+}
+
+@media (min-width: 768px) {
+  main {
+    grid-template-areas:
+      "searchEngine searchEngine searchEngine"
+      "place place hourlyForecast "
+      "place place hourlyForecast"
+      "dailyForecast dailyForecast hourlyForecast";
+  }
+
+  .bg-image {
+    background-image: url(../public/assets/images/bg-today-large.svg);
+  }
+}

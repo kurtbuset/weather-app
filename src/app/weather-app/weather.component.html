@@ -1,0 +1,323 @@
+<header
+  class="mx-auto max-w-[1100px] w-[95%] py-4 flex justify-between z-[999]"
+>
+  <div class="flex items-center">
+    <img src="assets/images/logo.svg" class="w-[130px] lg:w-40" alt="" />
+  </div>
+
+  <!-- dropdown example -->
+  <div class="relative">
+    <button
+      (click)="toggleUnitsDropdown()"
+      class="px-3 py-2 rounded-md bg-[rgb(37,37,63)] transition flex gap-1 hover:bg-gray-500"
+    >
+      <img src="assets/images/icon-units.svg" alt="" /> Units
+      <img src="assets/images/icon-dropdown.svg" alt="" />
+    </button>
+
+    <!-- Dropdown menu -->
+    <div
+      *ngIf="isUnitsOpen"
+      class="absolute right-0 mt-2 w-60 bg-[rgb(37,37,63)] p-2 rounded-lg shadow-lg overflow-hidden z-[9999]"
+    >
+      <a
+        class="block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        (click)="toggleUnitSystem()"
+      >
+        {{
+          unitSystem === "metric" ? "Switch to Imperial" : "Switch to Metric"
+        }}
+      </a>
+
+      <!-- Temperature -->
+      <p class="block p-2 text-sm text-neutral-400">Temperature</p>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': temperatureUnit === 'C' }"
+        (click)="setTemperatureUnit('C')"
+      >
+        Celcius (C)
+        <img
+          *ngIf="temperatureUnit === 'C'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': temperatureUnit === 'F' }"
+        (click)="setTemperatureUnit('F')"
+      >
+        Fahrenheit (F)
+        <img
+          *ngIf="temperatureUnit === 'F'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+
+      <hr class="border-t border-gray-600 my-3" />
+      <p class="block p-2 text-sm text-neutral-400">Wind Speed</p>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': windSpeedUnit === 'km/h' }"
+        (click)="setWindSpeedUnit('km/h')"
+      >
+        km/h
+        <img
+          *ngIf="windSpeedUnit === 'km/h'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': windSpeedUnit === 'mph' }"
+        (click)="setWindSpeedUnit('mph')"
+      >
+        mph
+        <img
+          *ngIf="windSpeedUnit === 'mph'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+
+      <hr class="border-t border-gray-600 my-3" />
+
+      <!-- Precipitation -->
+      <p class="block p-2 text-sm text-neutral-400">Precipitation</p>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': precipitationUnit === 'mm' }"
+        (click)="setPrecipitationUnit('mm')"
+      >
+        Millimeters (mm)
+        <img
+          *ngIf="precipitationUnit === 'mm'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+      <a
+        class="flex justify-between items-center block p-2 hover:bg-gray-500 hover:rounded-lg cursor-pointer"
+        [ngClass]="{ 'bg-gray-500 rounded-lg': precipitationUnit === 'in' }"
+        (click)="setPrecipitationUnit('in')"
+      >
+        Inches (in)
+        <img
+          *ngIf="precipitationUnit === 'in'"
+          src="assets/images/icon-checkmark.svg"
+          class="w-4 h-4"
+        />
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-[1100px] w-[90%] z-10 gap-6">
+  <section class="flex flex-col justify-center items-center mb-4">
+    <p class="text-5xl text-center font-bricolage mb-6 p-4">
+      How's the sky looking today?
+    </p>
+
+    <!-- <div > -->
+    <form action="" class="flex flex-col gap-3 w-full max-w-xl lg:flex-row">
+      <!-- Full width input -->
+      <div class="relative w-full lg:w-[85%]">
+        <!-- Icon -->
+        <img
+          src="assets/images/icon-search.svg"
+          alt="search icon"
+          class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
+        />
+
+        <!-- Input -->
+        <input
+          type="text"
+          placeholder="Search for a place..."
+          class="w-full pl-10 bg-[rgb(37,37,63)] text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          name="search"
+          [(ngModel)]="searchValue"
+          (focus)="showHistory = true"
+          (blur)="hideHistory()"
+        />
+        <!-- Search History Dropdown -->
+        <div
+          *ngIf="searchHistory.length && showHistory"
+          class="absolute bg-[rgb(37,37,63)] mt-3 p-2 text-white mt-1 w-full rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto"
+        >
+          <ul>
+            <li
+              *ngFor="let item of searchHistory"
+              (click)="searchValue = item; searchWeather(); showHistory = false"
+              class="px-4 py-2 cursor-pointer hover:bg-neutral-400/20 rounded transition"
+            >
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Full width button -->
+      <div class="w-full lg:w-[15%]">
+        <button
+          type="button"
+          (click)="searchWeather()"
+          class="w-full bg-blue-500 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Search
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- API ERROR DISPLAY -->
+
+  <section class="" *ngIf="weather">
+    <div
+      class="bg-image p-8 bg-[rgb(37,37,63)] rounded-lg mb-4 flex flex-col lg:flex-row justify-between items-center"
+    >
+      <div>
+        <p class="text-center lg:text-left text-2xl font-semibold">
+          {{ weather.locationName }}
+        </p>
+        <p class="text-sm text-neutral-300">
+          {{ weather.current.time | date : "EEEE, MMM d yyyy" }}
+        </p>
+      </div>
+      <div class="flex gap-8 items-center">
+        <img
+          [src]="getWeatherIcon(weather.current.weather_code)"
+          alt="current weather icon"
+          class="w-20 h-20 mb-2"
+        />
+        <p class="font-bold text-7xl italic">
+          {{ convertTemperature(weather.current.temperature_2m) }}
+        </p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 lg:flex lg:flex-row lg:justify-between">
+      <div
+        class="p-4 bg-[rgb(37,37,63)] rounded-lg w-full border border-neutral-400/30"
+      >
+        <p class="text-sm mb-4 text-neutral-400">Feels like</p>
+        <p class="text-2xl">
+          {{ convertTemperature(weather.current.apparent_temperature) }}
+        </p>
+      </div>
+      <div
+        class="p-4 bg-[rgb(37,37,63)] rounded-lg w-full border border-neutral-400/30"
+      >
+        <p class="text-sm mb-4 text-neutral-400">Humidity</p>
+        <p class="text-2xl">{{ weather.current.relative_humidity_2m }}%</p>
+      </div>
+      <div
+        class="p-4 bg-[rgb(37,37,63)] rounded-lg w-full border border-neutral-400/30"
+      >
+        <p class="text-sm mb-4 text-neutral-400">Wind</p>
+        <p class="text-2xl">{{ getWindSpeed() }} {{ windSpeedUnit }}</p>
+      </div>
+      <div
+        class="p-4 bg-[rgb(37,37,63)] rounded-lg w-full border border-neutral-400/30"
+      >
+        <p class="text-sm mb-4 text-neutral-400">Precipitation</p>
+        <p class="text-2xl">{{ getPrecipitation() }} {{ precipitationUnit }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="weather">
+    <p class="mb-4">Daily Forecast</p>
+    <div class="grid grid-cols-3 lg:grid-cols-7 gap-2">
+      <div
+        class="bg-[rgb(37,37,63)] rounded-lg p-2 flex flex-col items-center gap-6 border border-neutral-400/30"
+        *ngFor="let day of weather.daily"
+      >
+        <div>
+          <p>{{ day.time | date : "EEE" }}</p>
+        </div>
+        <div>
+          <img
+            [src]="getWeatherIcon(day.weather_code)"
+            alt="icon"
+            class="w-10 h-10"
+          />
+        </div>
+
+        <div class="flex gap-2 justify-between w-full text-sm">
+          <p>{{ convertTemperature(day.temp_max) }}</p>
+          <p>{{ convertTemperature(day.temp_min) }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[rgb(37,37,63)] p-4 rounded-lg" *ngIf="weather">
+    <div class="flex justify-between items-center mb-4">
+      <p>Hourly Forecast</p>
+
+      <div class="relative">
+        <select
+          [(ngModel)]="selectedDay"
+          class="px-3 py-2 rounded-md bg-[rgb(55,55,107)] text-white cursor-pointer hover:bg-gray-500 transition w-32 appearance-none pr-8"
+          (click)="toggleDayDropdown()"
+        >
+          <option
+            *ngFor="let day of weather.daily"
+            [ngValue]="day.time"
+            class="bg-[rgb(37,37,63)] text-white"
+          >
+            {{ day.time | date : "EEE" }}
+          </option>
+        </select>
+
+        <!-- Dropdown icon (same as your units button) -->
+        <img
+          src="assets/images/icon-dropdown.svg"
+          class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+        />
+      </div>
+    </div>
+
+    <div class="overflow-y-auto max-h-[500px] pr-2">
+      <div
+        class="mb-2 p-4 bg-neutral-500/10 border border-neutral-400/30 rounded-lg flex justify-between"
+        *ngFor="let hour of getHourlyForSelectedDay()"
+      >
+        <div class="flex items-center">
+          <!-- dynamic icon here -->
+          <img [src]="getWeatherIcon(hour.weather_code)" class="w-10 h-10" />
+          <p>{{ hour.time | date : "h a" }}</p>
+        </div>
+        <div class="flex items-center">
+          <p>{{ convertTemperature(hour.temperature_2m) }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div *ngIf="noResults" class="font-bricolage text-2xl text-center mt-8">
+  No search results found!
+</div>
+
+<div
+  class="mx-auto max-w-[1100px] w-[90%] z-10 flex justify-center flex-col items-center text-center"
+  *ngIf="apiError"
+>
+  <img src="assets/images/icon-error.svg" class="h-10 w-10" alt="" />
+  <p class="text-4xl font-semibold mb-3">Something went wrong.</p>
+  <p class="text-sm mb-4">
+    We couldnt connect to the server (API error). Please try again in a few
+    minutes.
+  </p>
+
+  <button
+    class="px-4 py-2 flex gap-2 transition rounded-lg bg-[rgb(37,37,63)] hover:bg-gray-500"
+    (click)="retry()"
+  >
+    <img src="assets/images/icon-retry.svg" alt="retry icon" />
+    Retry
+  </button>
+</div>
