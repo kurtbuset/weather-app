@@ -142,12 +142,18 @@
           (focus)="showHistory = true"
           (blur)="hideHistory()"
         />
-        <!-- Search History Dropdown -->
         <div
-          *ngIf="searchHistory.length && showHistory"
-          class="absolute bg-[rgb(37,37,63)] mt-3 p-2 text-white mt-1 w-full rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto"
+          *ngIf="(searchHistory.length || loading) && showHistory"
+          class="absolute bg-[rgb(37,37,63)] mt-3 p-2 text-white w-full rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto"
         >
           <ul>
+            <!-- Loading Indicator -->
+            <li *ngIf="loading" class="px-4 py-2 flex gap-2">
+              <img src="assets/images/icon-loading.svg" alt="loading">
+              Search in progress
+            </li>
+
+            <!-- Search History Items -->
             <li
               *ngFor="let item of searchHistory"
               (click)="searchValue = item; searchWeather(); showHistory = false"
@@ -172,9 +178,8 @@
     </form>
   </section>
 
-  <!-- API ERROR DISPLAY -->
 
-  <section class="" *ngIf="weather">
+  <section *ngIf="weather">
     <div
       class="bg-image p-8 bg-[rgb(37,37,63)] rounded-lg mb-4 flex flex-col lg:flex-row justify-between items-center"
     >
@@ -303,7 +308,7 @@
 </div>
 
 <div
-  class="mx-auto max-w-[1100px] w-[90%] z-10 flex justify-center flex-col items-center text-center"
+  class="mx-auto mt-8 max-w-[1100px] w-[90%] z-10 flex justify-center flex-col items-center text-center"
   *ngIf="apiError"
 >
   <img src="assets/images/icon-error.svg" class="h-10 w-10" alt="" />

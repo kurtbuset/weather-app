@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 export class WeatherComponent {
   apiError = false;
   lastSearch = '';
-
+  loading = false;
   weather: any;
   searchValue = '';
 
@@ -40,6 +40,7 @@ export class WeatherComponent {
   async searchWeather() {
     if (!this.searchValue) return;
 
+    this.loading = true;
     this.apiError = false; // reset error
     this.lastSearch = this.searchValue;
 
@@ -73,6 +74,8 @@ export class WeatherComponent {
       console.error('API ERROR:', err);
       this.apiError = true;
       this.weather = null;
+    } finally {
+      this.loading = false; // stop loading
     }
   }
 
