@@ -141,6 +141,7 @@
           [(ngModel)]="searchValue"
           (focus)="showHistory = true"
           (blur)="hideHistory()"
+          (keyup.enter)="searchWeather()"
         />
         <div
           *ngIf="(searchHistory.length || loading) && showHistory"
